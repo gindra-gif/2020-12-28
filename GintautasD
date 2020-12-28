@@ -1,0 +1,27 @@
+@Test
+    public void f1WaitTillTextIsVisible() {
+        invokeDriver();
+        WebDriverWait wait = new WebDriverWait(driver, 30);
+        driver.get("https://www.f-1.lt");
+
+        //Kintamieji
+        WebElement loginModal = driver.findElement(By.id("login"));
+        WebElement loginError = driver.findElement(By.id("login-error"));
+        String waitForErrorText = "Vartotojas tokiu vardu neegzistuoja";
+
+        driver.findElement(By.partialLinkText("Prisijungti")).click();
+        wait.until(ExpectedConditions.visibilityOf(loginModal));
+        System.out.println("Modal jau rodomas");
+
+        System.out.println("Seleniumas pradeda laukti, kol atsiras norimas tekstas");
+        driver.findElement(By.id("login-username")).sendKeys("TEST");
+        driver.findElement(By.id("login-password")).sendKeys("TEST");
+        driver.findElement(By.id("login-button")).click();
+        wait.until(ExpectedConditions.textToBePresentInElement(loginError, waitForErrorText));
+        System.out.println("Seleniumas baigti laukti, tekstas atsirado");
+
+        boolean errorShown = loginError.isDisplayed();
+        assertTrue("Error nebuvo rodomas", errorShown);
+
+        driver.quit();
+    }
